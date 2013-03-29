@@ -6,12 +6,13 @@
 # The full license is in the file COPYING.txt, distributed with this software.
 #------------------------------------------------------------------------------
 from atom.api import (
-    Bool, Constant, Coerced, ForwardTyped, Typed, observe, set_default
+    Bool, Enum, Constant, Coerced, ForwardTyped, Typed, Range, observe,
+    set_default
 )
 
 from enaml.core.declarative import d_
 from enaml.layout.geometry import Box
-from enaml.layout.layout_helpers import vbox
+from enaml.layout.layout_helpers import Spacer, vbox, hbox
 
 from .constraints_widget import (
     ConstraintsWidget, ProxyConstraintsWidget, ConstraintMember
@@ -172,4 +173,44 @@ class Container(ConstraintsWidget):
         cns = self.constraints[:]
         if not cns:
             cns.append(vbox(*self.widgets()))
+        return cns
+
+
+class VContainer(Container):
+
+    spacing = d_(Range(low=0, value=10))
+
+    top_spacer = d_(Typed(Spacer))
+
+    bottom_spacer = d_(Typed(Spacer))
+
+    def layout_constraints(self):
+        items = []
+        if self.top_spacer is not None:
+            items.append(self.top_spacer)
+        items.extend(self.widgets())
+        if self.bottom_spacer is not None:
+            items.append(self.bottom_spacer)
+        cns = self.constraints[:]
+        cns.append(vbox(*items, spacing=self.spacing))
+        return cns
+
+
+class HContainer(Container):
+
+    spacing = d_(Range(low=0, value=10))
+
+    left_spacer = d_(Typed(Spacer))
+
+    right_spacer = d_(Typed(Spacer))
+
+    def layout_constraints(self):
+        items = []
+        if self.left_spacer is not None:
+            items.append(self.left_spacer)
+        items.extend(self.widgets())
+        if self.right_spacer is not None:
+            items.append(self.right_spacer)
+        cns = self.constraints[:]
+        cns.append(hbox(*items, spacing=self.spacing))
         return cns
