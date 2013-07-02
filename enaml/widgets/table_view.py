@@ -7,7 +7,7 @@
 #------------------------------------------------------------------------------
 
 from atom.api import (
-    Bool, List, Typed, ForwardTyped, observe, set_default
+    Bool, Dict, List, Typed, ForwardTyped, observe, set_default
 )
 from enaml.core.declarative import d_
 
@@ -18,6 +18,12 @@ class ProxyTableView(ProxyControl):
     declaration = ForwardTyped(lambda: TableView)
 
     def set_model(self, model):
+        raise NotImplementedError
+
+    def set_vertical_header_visible(self, visible):
+        raise NotImplementedError
+
+    def set_horizontal_header_visible(self, visible):
         raise NotImplementedError
 
 class TableView(Control):
@@ -31,7 +37,7 @@ class TableView(Control):
     #: Whether or not the horizontal header is shown. Defaults to True.
     horizontal_header_visible = d_(Bool(True))
 
-    model = d_(Typed(List))
+    model = d_(List(Dict()))
 
     #: A scroll area is free to expand in width and height by default.
     hug_width = set_default('ignore')
@@ -39,3 +45,14 @@ class TableView(Control):
 
     #: A reference to the ProxyScrollArea object.
     proxy = Typed(ProxyTableView)
+
+    #--------------------------------------------------------------------------
+    # Observers
+    #--------------------------------------------------------------------------
+    @observe(('model', 'vertical_header_visible', 'horizontal_header_visible'))
+    def _update_proxy(self, change):
+        """ An observer which sends the state change to the proxy.
+
+        """
+        # The superclass implementation is sufficient.
+        super(Label, self)._update_proxy(change)
