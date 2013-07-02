@@ -31,13 +31,14 @@ class TableView(Control):
 
     """
 
+    # the data model - simple list of dictionaries for starters
+    model = d_(List(Dict()))
+
     #: Whether or not the vertical header is shown. Defaults to True.
     vertical_header_visible = d_(Bool(True))
 
     #: Whether or not the horizontal header is shown. Defaults to True.
     horizontal_header_visible = d_(Bool(True))
-
-    model = d_(List(Dict()))
 
     #: A scroll area is free to expand in width and height by default.
     hug_width = set_default('ignore')
@@ -55,4 +56,4 @@ class TableView(Control):
 
         """
         # The superclass implementation is sufficient.
-        super(Label, self)._update_proxy(change)
+        super(TableView, self)._update_proxy(change)
