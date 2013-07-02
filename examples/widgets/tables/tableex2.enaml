@@ -1,0 +1,90 @@
+#------------------------------------------------------------------------------
+#  Copyright (c) 2013, Nucleic Development Team.
+#  All rights reserved.
+#------------------------------------------------------------------------------
+from enaml.widgets.api import Window, Container, TableView, ComboBox, Label
+from enaml.layout.api import hbox, vbox
+from atom.api import List
+
+tstmodel = [
+    {
+        "pipe_id": "8.83500003815",
+        "bot_vert_depth": "2667.04657906",
+        "roughness": "0.00209999992512",
+        "pipe_length": "2670.59814453",
+        "pipe_od": "9.625",
+        "bot_meas_depth": "2670.59814453",
+        "composite_angle": "0.0"
+    },
+    {
+        "pipe_id": "8.83500003815",
+        "bot_vert_depth": "3697.19970818",
+        "roughness": "0.00209999992512",
+        "pipe_length": "1371.38818359",
+        "pipe_od": "9.625",
+        "bot_meas_depth": "4041.98632812",
+        "composite_angle": "0.0"
+    }
+]
+
+short_pipe_list = [
+    {
+        "TBLR_DESC_TXT": "3/4in. 1.2#",
+        "TBLR_WEIGHT_QTY": "1.2",
+        "TBLR_ID_QTY": "0.824",
+        "TBLR_NBR": "1",
+        "TBLR_OD_QTY": "1.05"
+    },
+    {
+        "TBLR_DESC_TXT": "1in. 1.8#",
+        "TBLR_WEIGHT_QTY": "1.8",
+        "TBLR_ID_QTY": "1.049",
+        "TBLR_NBR": "2",
+        "TBLR_OD_QTY": "1.315"
+    },
+    {
+        "TBLR_DESC_TXT": "1 1/4in. 2.1#",
+        "TBLR_WEIGHT_QTY": "2.1",
+        "TBLR_ID_QTY": "1.41",
+        "TBLR_NBR": "3",
+        "TBLR_OD_QTY": "1.66"
+    },
+    {
+        "TBLR_DESC_TXT": "1 1/4in. 2.3#",
+        "TBLR_WEIGHT_QTY": "2.3",
+        "TBLR_ID_QTY": "1.38",
+        "TBLR_NBR": "4",
+        "TBLR_OD_QTY": "1.66"
+    },
+]
+
+enamldef PipeSelector(ComboBox):
+    attr value = ''
+    attr field = ''
+    attr pipes = []
+
+    items << ['%s (%s)' % (p['TBLR_DESC_TXT'],p[self.field]) for p in pipes if p.has_key(self.field)]
+    index::
+        self.value = pipes[index][self.field]
+
+enamldef Ex2TableView(Window):
+    Container:
+        constraints = [
+            vbox(tbl, hbox(pipe_sel, pipe_ed_val,),),
+        ]
+
+        TableView: tbl:
+            model = tstmodel
+            vertical_header_visible = False
+            horizontal_header_visible = True
+            col_editor = PipeSelector
+            col_editor_args = dict( pipes= short_pipe_list, field = 'TBLR_ID_QTY' )
+            col_field = 'value'
+            col_editor_parent = self
+
+        PipeSelector: pipe_sel:
+            field = 'TBLR_ID_QTY'
+            pipes = short_pipe_list
+
+        Label: pipe_ed_val:
+            text << "Val(%s): %s" % (pipe_sel.field, pipe_sel.value)
