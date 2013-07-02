@@ -250,6 +250,11 @@ def status_item_factory():
     return QtStatusItem
 
 
+def tableview_factory():
+    from .qt_table_view import QtTableView
+    return QtTableView
+
+
 #def text_editor_factory():
 #    from .qt_text_editor import QtTextEditor
 #    return QtTextEditor
@@ -324,6 +329,7 @@ QT_FACTORIES = {
     'StackItem': stack_item_factory,
     'StatusBar': status_bar_factory,
     'StatusItem': status_item_factory,
+    'TableView': tableview_factory,
     'TimeSelector': time_selector_factory,
     'ToolBar': tool_bar_factory,
     'WebView': web_view_factory,
