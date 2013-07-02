@@ -7,7 +7,7 @@
 #------------------------------------------------------------------------------
 
 from atom.api import (
-    Bool, Dict, List, Typed, ForwardTyped, observe, set_default
+    Bool, Value, Dict, List, Str, Typed, ForwardTyped, observe, set_default
 )
 from enaml.core.declarative import d_
 
@@ -47,10 +47,15 @@ class TableView(Control):
     #: A reference to the ProxyScrollArea object.
     proxy = Typed(ProxyTableView)
 
+    col_editor_parent = d_(Value())
+    col_editor = d_(Value())
+    col_field = d_(Str(''))
+    col_editor_args = d_(Dict())
+
     #--------------------------------------------------------------------------
     # Observers
     #--------------------------------------------------------------------------
-    @observe(('model', 'vertical_header_visible', 'horizontal_header_visible'))
+    @observe(('model', 'vertical_header_visible', 'horizontal_header_visible','col_editor'))
     def _update_proxy(self, change):
         """ An observer which sends the state change to the proxy.
 

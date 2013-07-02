@@ -7,10 +7,37 @@
 #------------------------------------------------------------------------------
 
 from atom.api import Typed
-from .QtCore import QRect
-from .QtGui import QTableView, QStandardItemModel, QStandardItem
+from .QtCore import QRect, QVariant
+from .QtGui import QTableView, QStandardItemModel, QStandardItem, QItemDelegate, QLineEdit
 from enaml.widgets.table_view import ProxyTableView
 from .qt_control import QtControl
+
+class testDelegate(QItemDelegate):
+
+    def __init__(self, parent, col_editor, ed_field, ed_args, *args, **kw):
+        super(testDelegate, self).__init__(*args, **kw)
+        self.editor_parent = parent
+        self.col_editor = col_editor
+        self.editor_field = ed_field
+        self.editor_args = ed_args
+        self.editor = None
+
+    def createEditor(self,parent,option,index):
+        if index.column() != 3:
+            self.editor = QLineEdit(parent)
+            return self.editor
+        else:
+            args = self.editor_args
+            args['parent'] = self.editor_parent
+            self.editor = self.col_editor(**self.editor_args)
+            self.editor.show()
+            return self.editor.proxy.widget
+
+    def setModelData(self, editor, model, index):
+        if index.column() != 3:
+            model.setData(index,editor.text())
+        else:
+            model.setData(index,getattr(self.editor, self.editor_field, ''))
 
 
 class QtTableView(QtControl, ProxyTableView):
@@ -56,6 +83,12 @@ class QtTableView(QtControl, ProxyTableView):
         self.widget.setFrameRect(QRect(0, 0, 200,.10))
         self.set_vertical_header_visible(d.vertical_header_visible)
         self.set_horizontal_header_visible(d.horizontal_header_visible)
+        delegate = testDelegate(d.col_editor_parent,
+                                            d.col_editor,
+                                            d.col_field,
+                                            d.col_editor_args,
+                                            self.widget)
+        self.widget.setItemDelegate(delegate)
         self.set_model(d.model)
 
     def set_model(self, model):
