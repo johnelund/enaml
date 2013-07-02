@@ -1,0 +1,37 @@
+#------------------------------------------------------------------------------
+#  Copyright (c) 2013, Nucleic Development Team.
+#  All rights reserved.
+#------------------------------------------------------------------------------
+from enaml.widgets.api import Window, Container, TableView
+from enaml.layout.api import hbox
+from atom.api import List
+
+tstmodel = [
+    {
+        "pipe_id": "8.83500003815",
+        "bot_vert_depth": "2667.04657906",
+        "roughness": "0.00209999992512",
+        "pipe_length": "2670.59814453",
+        "pipe_od": "9.625",
+        "bot_meas_depth": "2670.59814453",
+        "composite_angle": "0.0"
+    },
+    {
+        "pipe_id": "8.83500003815",
+        "bot_vert_depth": "3697.19970818",
+        "roughness": "0.00209999992512",
+        "pipe_length": "1371.38818359",
+        "pipe_od": "9.625",
+        "bot_meas_depth": "4041.98632812",
+        "composite_angle": "0.0"
+    }
+]
+
+enamldef SimpleTableView(Window):
+    Container:
+        constraints = [ hbox(tbl)]
+
+        TableView: tbl:
+            model = tstmodel
+            vertical_header_visible = False
+            horizontal_header_visible = True
