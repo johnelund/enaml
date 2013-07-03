@@ -1,0 +1,69 @@
+#------------------------------------------------------------------------------
+#  Copyright (c) 2013, Nucleic Development Team.
+#  All rights reserved.
+#------------------------------------------------------------------------------
+
+from enaml.widgets.api import (
+    ChacoPlot,
+    Container,
+    Field,
+    Form,
+    Label,
+    MdiArea,
+    MdiWindow,
+    PushButton,
+    Window,
+    )
+from enaml.stdlib.fields import IntField
+from atom.api import Atom, Str, Range
+
+class Person(Atom):
+    """ A simple class representing a person object.
+
+    """
+    last_name = Str()
+    first_name = Str()
+    age = Range(low=0)
+
+def make_plot():
+    from numpy import linspace, pi, sin
+    from enable.api import Component, Container, Window
+    from chaco.api import create_line_plot, add_default_axes, add_default_grids, OverlayPlotContainer
+
+    x = linspace(-pi,pi,100)
+    y = sin(x)
+    plot = create_line_plot((x,y))
+    add_default_grids(plot)
+    add_default_axes(plot)
+    container = OverlayPlotContainer(padding = 50)
+    container.add(plot)
+    return Window(None, -1, component=container)
+
+def get_person():
+    return Person(last_name='Twain',first_name='Mark', age=50)
+
+enamldef PersonForm(Form):
+    attr person
+    Label:
+        text = 'First Name'
+    Field:
+        text := person.first_name
+    Label:
+        text = 'Last Name'
+    Field:
+        text := person.last_name
+    Label:
+        text = 'Age'
+    IntField:
+        minimum = 0
+        value := person.age
+
+enamldef Main(Window):
+    Container: contnr1:
+        MdiArea: mdi_area:
+            MdiWindow: form_win:
+                PersonForm: the_form:
+                    person =get_person()
+            MdiWindow: plot_win:
+                ChacoPlot: test_plot:
+                    container = make_plot()
