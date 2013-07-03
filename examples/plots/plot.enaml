@@ -1,0 +1,12 @@
+#------------------------------------------------------------------------------
+#  Copyright (c) 2013, Nucleic Development Team.
+#  All rights reserved.
+#------------------------------------------------------------------------------
+from enaml.widgets.api import Window, Container, TableView, ChacoPlot
+from enaml.layout.api import hbox
+from atom.api import List
+
+enamldef SimplePlotView(Window):
+    attr plot = None
+    ChacoPlot: plt:
+        container = plot
