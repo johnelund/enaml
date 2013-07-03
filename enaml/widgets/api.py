@@ -8,6 +8,7 @@
 from .action import Action
 from .action_group import ActionGroup
 from .calendar import Calendar
+from .chaco_plot import ChacoPlot
 from .check_box import CheckBox
 from .combo_box import ComboBox
 from .container import Container, Border

@@ -20,6 +20,11 @@ def calendar_factory():
     return QtCalendar
 
 
+def chaco_plot_factory():
+    from .qt_chaco_plot import QtChacoPlot
+    return QtChacoPlot
+
+
 def check_box_factory():
     from .qt_check_box import QtCheckBox
     return QtCheckBox
@@ -284,6 +289,7 @@ QT_FACTORIES = {
     'Action': action_factory,
     'ActionGroup': action_group_factory,
     'Calendar': calendar_factory,
+    'ChacoPlot': chaco_plot_factory,
     'CheckBox': check_box_factory,
     'ColorDialog': color_dialog_factory,
     'ComboBox': combo_box_factory,
